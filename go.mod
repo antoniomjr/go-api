@@ -3,6 +3,8 @@ module github.com/antoniomjr/go/9-apis
 go 1.21.6
 
 require (
+	github.com/go-chi/chi v1.5.1
+	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-chi/jwtauth v1.2.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
