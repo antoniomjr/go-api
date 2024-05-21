@@ -1,7 +1,22 @@
-POST http://localhost:8000/products
+POST http://localhost:8000/products HTTP/1.1
 Content-Type: application/json
     
     {
     "name": "Product 1",
     "price": 100
+    }
+
+###
+
+GET http://localhost:8000/products/cb4e252b-fe8d-4bfb-af0c-a078ce46024f HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/products/cb4e252b-fe8d-4bfb-af0c-a078ce46024f HTTP/1.1
+Content-Type: application/json
+
+    {
+    "name": "Updated Product",
+    "price": 300
     }
