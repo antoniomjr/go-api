@@ -3,13 +3,14 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 
 	"github.com/antoniomjr/go/9-apis/internal/dto"
 	"github.com/antoniomjr/go/9-apis/internal/entity"
-	entityPkg "github.com/antoniomjr/go/9-apis/pkg/entity"
 	"github.com/antoniomjr/go/9-apis/internal/infra/database"
+	entityPkg "github.com/antoniomjr/go/9-apis/pkg/entity"
 )
 
 type ProductHandler struct {
@@ -77,7 +78,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ ,err = h.ProductDB.FindById(id)
+	_, err = h.ProductDB.FindById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -89,4 +90,50 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err := h.ProductDB.FindById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	err = h.ProductDB.Delete(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *ProductHandler) GetAllProducts(w http.ResponseWriter, r *http.Request) {
+	page := r.URL.Query().Get("page")
+	liimit := r.URL.Query().Get("limit")
+	sort := r.URL.Query().Get("sort")
+
+	pageInt, err := strconv.Atoi(page)
+	if err != nil {
+		pageInt = 0
+	}
+	limitInt, err := strconv.Atoi(liimit)
+	if err != nil {
+		limitInt = 0
+	}
+
+	products, err := h.ProductDB.FindAll(pageInt, limitInt, sort)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(products)
 }
