@@ -25,3 +25,11 @@ func (u *User) FindByEmail(email string) (*entity.User, error) {
 	}
 	return &user, nil
 }
+
+func (u *User) Update(user *entity.User) error {
+	_, err := u.FindByEmail(user.Email)
+	if err != nil {
+		return err
+	}
+	return u.DB.Save(user).Error
+}

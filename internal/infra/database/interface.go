@@ -6,7 +6,10 @@ import (
 
 type UserInterface interface {
 	Create(user *entity.User) error
+	//FindAll(page, limit int, sort string) ([]entity.User, error)
 	FindByEmail(email string) (*entity.User, error)
+	Update(user *entity.User) error
+	//Delete(email string) error
 }
 
 type ProductInterface interface {

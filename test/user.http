@@ -1,0 +1,43 @@
+POST http://localhost:8000/users HTTP/1.1
+Content-Type: application/json
+    
+    {
+    "name": "Wrong User",
+    "email": "wrong@emil.com",
+    "password": "wrongpassword"
+    }
+###
+POST http://localhost:8000/users/generate_token HTTP/1.1
+Content-Type: application/json
+    
+    {
+    "email": "wrong@emil.com",
+    "password": "wrongpassword"
+    }
+
+###
+GET http://localhost:8000/users/email@emil.com HTTP/1.1
+Content-Type: application/json
+###
+GET http://localhost:8000/users/user@emil.com HTTP/1.1
+Content-Type: application/json
+###
+
+GET http://localhost:8000/email/ HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/users/user@emil.com HTTP/1.1
+Content-Type: application/json
+
+    {
+    "name": "Updated User",
+    "email": "user@emil.com",
+    "password": "DumbPassword"
+    }
+
+###
+
+DELETE  http://localhost:8000/products/cb4e252b-fe8d-4bfb-af0c-a078ce46024f HTTP/1.1
+Content-Type: application/json
