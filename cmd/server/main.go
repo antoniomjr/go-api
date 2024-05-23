@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
@@ -34,11 +35,16 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	//Products
-	r.Post("/products", productHandler.Create)
-	r.Get("/products/{id}", productHandler.Get)
-	r.Put("/products/{id}", productHandler.Update)
-	r.Delete("/products/{id}", productHandler.Delete)
-	r.Get("/products", productHandler.GetAll)
+	r.Route("/products", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(configs.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+		r.Post("/", productHandler.Create)
+		r.Get("/", productHandler.GetAll)
+		r.Get("/{id}", productHandler.Get)
+		r.Put("/{id}", productHandler.Update)
+		r.Delete("/{id}", productHandler.Delete)
+	})
+	
 
 	//Users
 	r.Post("/users", userHandler.Create)

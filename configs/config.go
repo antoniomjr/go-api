@@ -14,7 +14,7 @@ type conf struct {
 	DBName        string `mapstructure:"DB_NAME"`
 	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
 	JwtSecret     string `mapstructure:"JWT_SECRET"`
-	JwtExpiresIn  int	 `mapstructure:"JWT_EXPIREIN"`
+	JwtExpiresIn  int	 `mapstructure:"JWT_EXPIRESIN"`
 	TokenAuth	 *jwtauth.JWTAuth 
 }
 
