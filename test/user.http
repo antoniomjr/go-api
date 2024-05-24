@@ -2,9 +2,9 @@ POST http://localhost:8000/users HTTP/1.1
 Content-Type: application/json
     
     {
-    "name": "Wrong User",
-    "email": "wrong@emil.com",
-    "password": "wrongpassword"
+    "name": "New User",
+    "email": "new@emil.com",
+    "password": "newgpassword"
     }
 ###
 POST http://localhost:8000/users/generate_token HTTP/1.1

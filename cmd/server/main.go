@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/middleware"
@@ -30,10 +31,17 @@ func main() {
 	productHandler := handlers.NewProductHandler(productDB)
 
 	userDB := database.NewUser(db)
-	userHandler := handlers.NewUserHandler(userDB, configs.TokenAuth, configs.JwtExpiresIn)
+	userHandler := handlers.NewUserHandler(userDB)
 
 	r := chi.NewRouter()
+
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	//r.Use(LoadRequest)
+	//r.Use(middleware.RealIP)
+	r.Use(middleware.WithValue("jwt", configs.TokenAuth))
+	r.Use(middleware.WithValue("jwtExpiresIn", configs.JwtExpiresIn))
+	
 	//Products
 	r.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(configs.TokenAuth))
@@ -55,4 +63,11 @@ func main() {
 	//http.HandleFunc("/products", productHandler.CreateProduct)
 
 	http.ListenAndServe(":8000", r)
+}
+
+func LoadRequest(next http.Handler) http.Handler{
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
+		log.Println(r.Method, r.URL.Path, r.RemoteAddr, r.UserAgent())
+		next.ServeHTTP(w, r)
+	})
 }
