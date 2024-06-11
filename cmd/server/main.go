@@ -12,10 +12,10 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/antoniomjr/go/9-apis/configs"
-	_ "github.com/antoniomjr/go/9-apis/docs"
 	"github.com/antoniomjr/go/9-apis/internal/entity"
 	"github.com/antoniomjr/go/9-apis/internal/infra/database"
-	"github.com/antoniomjr/go/9-apis/internal/infra/webserver/handlers"
+	"github.com/antoniomjr/go/9-apis/internal/infra/webserver/handlers" 
+	_ "github.com/antoniomjr/go/9-apis/cmd/server/docs"
 )
 
 // @title 			Go Experts API
@@ -80,7 +80,7 @@ func main() {
 
 	//http.HandleFunc("/products", productHandler.CreateProduct)
 
-	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("doc.json")))
+	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http:localhost:8000/swagger/doc.json")))
 
 	http.ListenAndServe(":8000", r)
 }
