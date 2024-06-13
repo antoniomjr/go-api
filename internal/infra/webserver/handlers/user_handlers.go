@@ -12,8 +12,12 @@ import (
 	"github.com/antoniomjr/go/9-apis/internal/infra/database"
 )
 
+type Error struct {
+	Message string `json:"message"`
+}
+
 type UserHandler struct {
-	UserDB database.UserInterface
+	UserDB        database.UserInterface
 	JwtExperiesIn int
 }
 
@@ -23,7 +27,7 @@ func NewUserHandler(db database.UserInterface) *UserHandler {
 }
 
 func (uh *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
-	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth) 
+	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
 	jwtExperiesIn := r.Context().Value("jwtExpiresIn").(int)
 	var user dto.GetJWTInput
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -47,7 +51,7 @@ func (uh *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 		"exp": time.Now().Add(time.Second * time.Duration(jwtExperiesIn)).Unix(),
 	})
 
-	accessToken := struct{
+	accessToken := struct {
 		AccessToken string `json:"access_token"`
 	}{
 		AccessToken: tokenString,
@@ -58,6 +62,16 @@ func (uh *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(accessToken)
 }
 
+// Create user godoc
+// @Summary 		Create user
+// @Description 	Create user
+// @Tags 			users
+// @Accept 			json
+// @Produce 		json
+// @Param 			request body dto.CreateUserInput	true	"user request"
+// @Success 		201
+// @Failure 		500			{object}	Error
+// @Router 			/users [post]
 func (uh *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var user dto.CreateUserInput
 	err := json.NewDecoder(r.Body).Decode(&user)
